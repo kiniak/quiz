@@ -5,6 +5,11 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    message: 'Hello World!'
+    questions: null
+  },
+  mutations: {
+    saveData (state, data) {
+      state.questions = data
+    }
   }
 })

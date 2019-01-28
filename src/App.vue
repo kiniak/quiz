@@ -7,7 +7,15 @@
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  mounted () {
+    this.$http.get('https://opentdb.com/api.php?amount=10')
+      .then(({ data }) => {
+        this.$store.commit('saveData', data)
+        // this.$store.commit('saveData', data)
+        return data
+      })
+  }
 }
 </script>
 
