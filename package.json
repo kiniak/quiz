@@ -1,12 +1,13 @@
 {
-  "name": "quiz",
-  "version": "1.0.0",
+  "name": "boilerplate",
+  "version": "1.0.1",
   "description": "A Vue.js project",
   "author": "Kinga Glowacka <glowacka.kin@gmail.com>",
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
+    "npm run dev": "npm start",
     "unit": "jest --config test/unit/jest.conf.js --coverage",
     "test": "npm run unit",
     "lint": "eslint --ext .js,.vue src test/unit",
