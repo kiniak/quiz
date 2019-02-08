@@ -1,10 +1,18 @@
 <template>
     <div class="quiz" text-center>
       <template v-if="questions">
-        <h1 class="question">{{question.question}}{{question.length}}</h1>
+        <h1 class="question">{{question.question}}</h1>
         <button class="btn btn-back btn-success" v-on:click="decrement" :disabled="currentQuestion===1">back</button>
         <button class="btn btn-next btn-error"  v-on:click="increment" :disabled="currentQuestion===questions.length- 1">next</button>
         <div class="answers"></div>
+      </template>
+      <template>
+        <ul>
+          <li v-for="answer in allAnsweres" :key="answer">
+            <input type="checkbox" :id="answer" :value="answer">
+            <label :for="answer">{{answer}}</label>
+          </li>
+        </ul>
       </template>
     </div>
 </template>
@@ -13,30 +21,34 @@
 import Vue from 'vue'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-import { mapGetters, mapMutations } from 'vuex'
+import {mapGetters, mapMutations, mapState} from 'vuex'
 Vue.use(VueAxios, axios)
 export default {
   name: 'Quiz',
   data () {
     return {
-      questions: null
     }
   },
-  mounted () {
-    axios.get('https://opentdb.com/api.php?amount=10').then((response) => {
-      this.questions = response.data.results;
-    })
-      .catch((e) => {
-        console.error(e)
-      })
+  mounted: function () {
+    this.$store.dispatch('LOAD_PROJECT_LIST')
   },
   computed: {
+    ...mapState([
+      'questions'
+    ]),
     ...mapGetters([
       'currentQuestion'
     ]),
     question () {
-      let question = this.questions[this.currentQuestion - 1]
+      let question = this.questions[this.currentQuestion]
       return question
+    },
+    allAnsweres () {
+      if (!this.questions) return []
+      let goodAnswer = this.questions[this.currentQuestion].correct_answer
+      let wrongAnswer = this.questions[this.currentQuestion].incorrect_answers
+      let answeres = [goodAnswer, ...wrongAnswer].sort()
+      return answeres
     }
   },
   methods: {
@@ -53,7 +65,7 @@ export default {
   .quiz{
     text-align: center;
   }
-  .question{
+  .question {
     min-height: 80px;
   }
   .btn{
@@ -78,10 +90,6 @@ export default {
     filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#bc3315', endColorstr='#d0451b',GradientType=0);
     background-color:#bc3315;
   }
-  .btn:active {
-    position:relative;
-    top:1px;
-}
   .btn:disabled{
     background: grey;
 
